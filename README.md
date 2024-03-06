@@ -20,7 +20,7 @@ This will automatically head over to the AWS Management console
 **Advanced Options -> IAM Role:** Select the LabInstanceRole in the dropdown of AWS Student account.
 **Launch Instance:** Click on the "Launch" button to launch the instance after ensuring all the correct configurations are made.
 
-This should be done twice to create two seperate instances **EC2_ImageRekognition** and **EC2_TextRekognition** 
+This should be done twice to create two seperate instances **abi_image_rekognition** and **abi_text_rekognition** 
 
 **Accessing Instance:** Once the instance is launched, you can access it using SSH. Use the public IP address or public DNS provided by AWS to connect to your instance.
     Use CyberDuck to connect to SSH from mac and Putty or WinSCP from windows.
@@ -57,37 +57,37 @@ It is required to create aws credentials file and can be done using the below co
 
 **Commands to Execute JAR files:**
 
-*First* : Run ImageRekognition JAR in EC2_ImageRekognition instance 
+*First* : Run ImageRekognition JAR in abi_image_rekognition instance 
 	-> java -jar image-rekognition-1.0-SNAPSHOT.jar 
-*Second* : Run TextRekognition JAR in EC2_TextRekognition instance 
+*Second* : Run TextRekognition JAR in abi_text_rekognition instance 
 	-> java -jar text-rekognition-1.0-SNAPSHOT.jar
 
-**EC2_ImageRekognition**:
+**abi_image_rekognition**:
 This component is responsible for processing images using Amazon Rekognition.
 It starts by fetching car images from a public S3 bucket (https://njit-cs-643.s3.us-east-1.amazonaws.com).
 Once an image is fetched, it performs object recognition on the image using Amazon Rekognition.
 After processing, it prints the list of objects detected in the image.
 Finally, it pushes the processed image and its results to an SQS Queue.
 
-**EC2_TextRekognition:**
+**abi_text_rekognition:**
 This component is responsible for processing text from car images.
-It listens to the SQS Queue where the processed images are pushed by EC2_ImageRekognition.
+It listens to the SQS Queue where the processed images are pushed by abi_image_rekognition.
 When an image is received from the queue, it fetches the respective image.
 Then, it performs text recognition on the image using Amazon Rekognition.
 After processing, it recognizes the text present in the image and prints the output.
 
-**SQS Queue:** The SQS Queue is used as a mechanism for communication between EC2_ImageRekognition and EC2_TextRekognition, allowing the latter to know when new images are ready for text recognition.
+**SQS Queue:** The SQS Queue is used as a mechanism for communication between abi_image_rekognition and abi_text_rekognition, allowing the latter to know when new images are ready for text recognition.
 
 **Workflow in Instances:** 
 
-Started by executing EC2_ImageRekognition to process the car images and push the results to the SQS Queue.
+Started by executing abi_image_rekognition to process the car images and push the results to the SQS Queue.
 
-Once the EC2_ImageRekognition is executed, it creates a Queue from code.
+Once the abi_image_rekognition is executed, it creates a Queue from code.
 In my case, code will initiate queue av739.fifo (only if not exists, so it doesn't create multiple times when you run again) and this created a queue automatically in AWS and uses it. 
 Navigate to services in AWS console and search for SQS, and this shows up that QUEUE is created and also shows the statistics in graph metrics. 
 
-Next, executed  EC2_TextRekognition to listen to the SQS Queue and process the images for text recognition.
-EC2_TextRekognition fetches the processed images and recognizes the text present in the images.
+Next, executed  abi_text_rekognition to listen to the SQS Queue and process the images for text recognition.
+abi_text_rekognition fetches the processed images and recognizes the text present in the images.
 
 Finally, it prints the output of the text recognition process.
 
