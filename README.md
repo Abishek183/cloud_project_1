@@ -1,4 +1,4 @@
-*Detailed Execution workflow of AWS SQS PIPELINE with screenshots are in SG2653 - Assignment PDF in the same repository.*
+*Detailed Execution workflow of AWS SQS PIPELINE with screenshots are in Assignment PDF in the same repository.*
 
 The above projects contain code to recognize images and text using AWS tools. They also include code for communicating via SQS, a messaging service in AWS. This communication logic is intertwined with the image and text recognition code because they need to work together on the EC2 instances for everything to function simultaneously.
 
@@ -31,13 +31,8 @@ This should be done twice to create two seperate instances **EC2_ImageRekognitio
 **Connecting SSH:** The below steps to be done to both EC2s created
 
 Headover to the EC2 and click on connect, and select SSH Client Tab. 
-Open the Terminal or Command line in the local system and traverse to the path where .pem files are located. 
-
-Then change the permissions of .pem file using the below command 
-    chmod 400 “IMAGE_REKOGNITION”.pem
-
-Next to connect to SSH Client, enter the below command and type yes to connect
-	ssh -i “IMAGE_REKOGNITION.pem” ec2-user@ec2-3-90-45-97.compute-1.amazonaws.com
+Open the putty and enter the IP address of the instance and configure the .ppk file assigned for that instance.
+enter the login user as ec2-user and click on connect.
 
 The addresses change for different EC2s and the same action needs to be done to connect two EC2s that were created.
 
@@ -88,7 +83,7 @@ After processing, it recognizes the text present in the image and prints the out
 Started by executing EC2_ImageRekognition to process the car images and push the results to the SQS Queue.
 
 Once the EC2_ImageRekognition is executed, it creates a Queue from code.
-In my case, code will initiate queue SG2653.fifo (only if not exists, so it doesn't create multiple times when you run again) and this created a queue automatically in AWS and uses it. 
+In my case, code will initiate queue av739.fifo (only if not exists, so it doesn't create multiple times when you run again) and this created a queue automatically in AWS and uses it. 
 Navigate to services in AWS console and search for SQS, and this shows up that QUEUE is created and also shows the statistics in graph metrics. 
 
 Next, executed  EC2_TextRekognition to listen to the SQS Queue and process the images for text recognition.
